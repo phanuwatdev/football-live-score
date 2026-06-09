@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package match;
+option go_package = "./proto";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+message MatchRequest {
+  string league_name = 1;
+}
+
+message MatchData {
+  string match_id = 1;
+  string home_team = 2;
+  string away_team = 3;
+  int32 home_score = 4;
+  int32 away_score = 5;
+  string status = 6;
+  int32 minute = 7;
+  string league = 8;
+  string match_time = 9;
+}
+
+message LeagueResponse {
+  repeated MatchData matches = 1;
+}
+
+service MatchService {
+  // GetMatchesByLeague
+  rpc GetMatchesByLeague(MatchRequest) returns (LeagueResponse) {
+    option (google.api.http) = {
+      get: "/v1/matches/{league_name}"
+    };
+  }
+
+  // GetAllMatches
+  rpc GetAllMatches(google.protobuf.Empty) returns (LeagueResponse) {
+    option (google.api.http) = {
+      get: "/v1/matches"
+    };
+  }
+}
